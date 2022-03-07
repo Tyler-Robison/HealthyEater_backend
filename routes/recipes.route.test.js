@@ -24,6 +24,7 @@ const formattedUrlBlankNutrients = '/recipes/complex/1?ingredients[]=ham&ingredi
 // max 1000 cals, 100 satFat
 const formattedUrlWithNutrients = '/recipes/complex/1?ingredients[]=ham&ingredients[]=cheese&nutrientObj=%7B%22maxFat%22:null,%22maxSaturatedFat%22:100,%22maxCalories%22:1000,%22maxCarbs%22:null,%22maxCholesterol%22:null,%22maxSugar%22:null,%22maxSodium%22:null,%22maxProtein%22:null%7D'
 
+/************************************** GET /recipes/complex/:id */
 
 describe("GET /recipes/complex/:id", function () {
     test("correct response without nutrient constraints", async function () {
@@ -95,6 +96,8 @@ describe("GET /recipes/complex/:id", function () {
 
 });
 
+/************************************** GET /recipes/detail/:id */
+
 describe("GET /recipes/detail/:id", function () {
 
     test("correct response from nutrient detail", async function () {
@@ -127,7 +130,7 @@ describe("GET /recipes/detail/:id", function () {
     });
 });
 
-
+/************************************** GET /recipes/:id */
 
 describe("GET /recipes/:id", function () {
 
@@ -166,6 +169,8 @@ describe("GET /recipes/:id", function () {
     });
 
 });
+
+/************************************** POST /recipes/:id */
 
 describe("POST /recipes/:id", function () {
 
@@ -220,6 +225,8 @@ describe("POST /recipes/:id", function () {
         expect(resp.statusCode).toEqual(401);
     });
 });
+
+/************************************** DELETE /recipes/:id */
 
 describe("DELETE /recipes/:id", function () {
 

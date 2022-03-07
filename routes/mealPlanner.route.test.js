@@ -19,6 +19,8 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
+/************************************** POST /meals/:id */
+
 describe("POST meals/:id", function () {
 
     test("Can add a meal for a user", async function () {
@@ -88,36 +90,7 @@ describe("POST meals/:id", function () {
     });
 });
 
-describe("DELETE meals/:id/:meal_id", function () {
-
-    test("Can delete a meal for a user", async function () {
-        const resp = await request(app)
-            .delete('/meals/1/1')
-            .set("authorization", `Bearer ${u1Token}`)
-
-        // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(201);
-    });
-
-    test("401 on wrong user", async function () {
-        const resp = await request(app)
-            .delete('/meals/2/1')
-            .set("authorization", `Bearer ${u1Token}`)
-
-        // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(401);
-    });
-
-    test("404 on non-existant meal id", async function () {
-        const resp = await request(app)
-            .delete('/meals/1/999999')
-            .set("authorization", `Bearer ${u1Token}`)
-
-        // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(404);
-    });
-
-});
+/************************************** DELETE /meals/:id/:meal_id */
 
 describe("DELETE meals/:id/:meal_id", function () {
 
@@ -149,6 +122,8 @@ describe("DELETE meals/:id/:meal_id", function () {
     });
 
 });
+
+/************************************** PATCH /meals/:id */
 
 describe("PATCH meals/:id", function () {
 
