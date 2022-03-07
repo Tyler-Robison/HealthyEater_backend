@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/userAuth.json",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "title": {
+            "type": "string"
+        },
+        "weightWatcherSmartPoints": {
+            "type": "number"
+        }
+    },
+    "additionalProperties": true,
+    "required": [
+        "id",
+        "title",
+        "weightWatcherSmartPoints"
+    ]
+}
