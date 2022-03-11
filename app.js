@@ -13,14 +13,11 @@ const userRoutes = require("./routes/users");
 const recipeRoutes = require("./routes/recipes")
 const mealRoutes = require("./routes/mealPlanner")
 
-// const morgan = require("morgan");
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
-// app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
 app.use("/auth", authRoutes);

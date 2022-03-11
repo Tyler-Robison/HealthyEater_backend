@@ -16,7 +16,7 @@ const { BCRYPT_WORK_FACTOR } = require("../config.js");
 class User {
   /** authenticate user with username, password.
    *
-   * Returns { id, username, is_admin }
+   * Returns { id, username }
    *
    * Throws UnauthorizedError is user not found or wrong password.
    **/
@@ -26,8 +26,7 @@ class User {
     const result = await db.query(
       `SELECT id, 
                   username,
-                  password,
-                  is_admin AS "isAdmin"
+                  password
            FROM users
            WHERE username = $1`,
       [username],
@@ -40,6 +39,7 @@ class User {
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid === true) {
         delete user.password;
+        // user contains username/id
         return user;
       }
     }
@@ -49,12 +49,12 @@ class User {
 
   /** Register user with data.
    *
-   * Returns { id, username, isAdmin }
+   * Returns { id, username }
    *
    * Throws BadRequestError on duplicates.
    **/
 
-  static async register({ username, password, isAdmin }) {
+  static async register({ username, password }) {
     const duplicateCheck = await db.query(
       `SELECT username
            FROM users
@@ -71,15 +71,12 @@ class User {
     const result = await db.query(
       `INSERT INTO users
            (username,
-            password,
-            is_admin)
-           VALUES ($1, $2, $3)
-           RETURNING username, is_admin AS "isAdmin", id`,
-      // added id
+            password)
+           VALUES ($1, $2)
+           RETURNING username, id`,
       [
         username,
-        hashedPassword,
-        isAdmin
+        hashedPassword
       ],
     );
 
@@ -90,13 +87,12 @@ class User {
 
   /** Find all users.
    *
-   * Returns [{ username, is_admin }, ...]
+   * Returns [{ username }, ...]
    **/
 
   static async findAll() {
     const result = await db.query(
-      `SELECT id, username,
-                  is_admin AS "isAdmin"
+      `SELECT id, username
            FROM users
            ORDER BY username`,
     );
@@ -106,7 +102,7 @@ class User {
 
   /** Given a username, return data about a specific user.
    *
-   * Returns { username, is_admin }
+   * Returns { username }
    *
    * Throws NotFoundError if user not found.
    **/
@@ -114,7 +110,6 @@ class User {
   static async get(id) {
     const userRes = await db.query(
       `SELECT id, username,
-                  is_admin AS "isAdmin",
                   points
            FROM users
            WHERE id = $1`,

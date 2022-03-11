@@ -2,7 +2,7 @@
 const express = require("express");
 const User = require('../models/user')
 const { BadRequestError } = require("../expressError");
-const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
+const { ensureCorrectUser } = require("../middleware/auth");
 const MealPlan = require("../models/mealPlan");
 const router = new express.Router();
 const jsonschema = require("jsonschema");
@@ -14,12 +14,17 @@ const mealplanSchema = require("../schemas/mealplan.json");
  *         day: "Wed",
  *         id: 1,
  *         recipe_id: 1234,
+ *         ww_points: 14,
+ *         name: 'bacon'
  *     }
+ * 
+ *      inserts meal into mealplan based on recipeID
+ *      returns all info needed by mealplanner
  *
- * Authorization required: admin or same user as :id
+ * Authorization required: same user as :id
  **/
 
-router.post('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.post('/:id', ensureCorrectUser, async (req, res, next) => {
     try {
         const validator = jsonschema.validate(req.body, mealplanSchema);
         if (!validator.valid) {
@@ -33,22 +38,48 @@ router.post('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
         // console.log('recipe id', recipe_id)
         // console.log('day', day)
         const mealRes = await MealPlan.createMealPlan(id, recipe_id, day)
-        return res.status(201).json(mealRes)
+        
+        const mealplannerRow = {
+            id: mealRes.result.id,
+            recipe_id: mealRes.result.recipe_id,
+            day: mealRes.result.day,
+            ww_points: mealRes.recipeInfo.ww_points,
+            name: mealRes.recipeInfo.name
+        }
+       
+        return res.status(201).json({mealplannerRow})
+    } catch (err) {
+        return next(err)
+    }
+})
+
+/** DELETE meals/:id/:meal_id  =>  { deleted: meal_id }
+ *
+ * Authorization required: same user as :id
+ **/
+
+router.delete('/:id/:meal_id', ensureCorrectUser, async (req, res, next) => {
+    try {
+        const { meal_id } = req.params
+        await MealPlan.deleteMeal(meal_id)
+        return res.status(204).json({});
     } catch (err) {
         return next(err)
     }
 })
 
 /** DELETE meals/:id  =>  { deleted: id }
+ * 
+ * Route for deleting ALL meals for a given user
  *
- * Authorization required: admin or same user as :id
+ * Authorization required: same user as :id
  **/
 
-router.delete('/:id/:meal_id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.delete('/:id', ensureCorrectUser, async (req, res, next) => {
     try {
-        const { meal_id } = req.params
-        const mealRes = await MealPlan.deleteMeal(meal_id)
-        return res.status(201).json(mealRes)
+        const { id } = req.params
+        await MealPlan.deleteUserMeals(id)
+        return res.status(204).json({});
     } catch (err) {
         return next(err)
     }
@@ -56,10 +87,10 @@ router.delete('/:id/:meal_id', ensureCorrectUserOrAdmin, async (req, res, next) 
 
 /** PATCH meals/:id  =>  { points: pointsRes }
  *
- * Authorization required: admin or same user as :id
+ * Authorization required: same user as :id
  **/
 
-router.patch('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.patch('/:id', ensureCorrectUser, async (req, res, next) => {
     try {
         const validator = jsonschema.validate(req.body, pointsSchema);
         if (!validator.valid) {
@@ -70,8 +101,8 @@ router.patch('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
         const id = req.params.id
         const points = req.body.points
         const pointsRes = await User.setPoints(id, points)
-        // change to 201 status
-        return res.json({ points: pointsRes })
+
+        return res.status(200).json(pointsRes);
 
     } catch (err) {
         return next(err);

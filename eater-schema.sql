@@ -5,16 +5,8 @@ CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   username VARCHAR(25) NOT NULL,
   password TEXT NOT NULL,
-  is_admin BOOLEAN NOT NULL DEFAULT FALSE,
   points INTEGER
 );
-
--- for user created meals based on choosen ingredients
--- CREATE TABLE user_meals (
---   id SERIAL PRIMARY KEY,
---   user_id INTEGER REFERENCES users ON DELETE CASCADE,
---   name TEXT NOT NULL
--- );
 
 -- recipes that have been saved by ANY user.
 CREATE TABLE recipes (

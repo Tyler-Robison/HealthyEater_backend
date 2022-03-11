@@ -2,11 +2,8 @@
 
 /** Routes for users. */
 
-const jsonschema = require("jsonschema");
-
 const express = require("express");
-const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
-const { BadRequestError } = require("../expressError");
+const { ensureCorrectUser } = require("../middleware/auth");
 const User = require("../models/user");
 const MealPlan = require("../models/mealPlan");
 const Recipe = require("../models/recipe");
@@ -14,14 +11,24 @@ const Recipe = require("../models/recipe");
 const router = express.Router();
 
 
-/** GET users/[username] => { user }
+/** GET users/:id => { user }
+ * 
+ * Primary route used to get user info
+ * 
+ * Gets auth information from User.get()
+ * Gets mealplan information from MealPlan.getMealPlan()
+ * Gets saved recipes from Recipe.getRecipes()
+ * 
+ * returned user is used to create currentUser
+ * currentUser controls access on the front-end
+ * and stores user's recipe/mealplan information
  *
- * Returns { username, isAdmin }
+ * Returns { user }
  *
- * Authorization required: admin or same user as :username
+ * Authorization required: same id as :id
  **/
 
-router.get("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.get("/:id", ensureCorrectUser, async function (req, res, next) {
   try {
     const id = req.params.id;
     const user = await User.get(id);
@@ -41,13 +48,13 @@ router.get("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
 
 /** DELETE users/[id]  =>  { deleted: id }
  *
- * Authorization required: admin or same user as :id
+ * Authorization required: same user as :id
  **/
 
-router.delete("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.delete("/:id", ensureCorrectUser, async function (req, res, next) {
   try {
     await User.remove(req.params.id);
-    return res.json({ deleted: req.params.id });
+    return res.status(204).json({});
   } catch (err) {
     return next(err);
   }

@@ -3,8 +3,7 @@
 const db = require("../db");
 const {
     NotFoundError,
-    BadRequestError,
-    UnauthorizedError,
+    BadRequestError
 } = require("../expressError");
 
 /** Related functions for Recipes. */

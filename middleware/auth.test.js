@@ -4,37 +4,33 @@ const jwt = require("jsonwebtoken");
 const { UnauthorizedError } = require("../expressError");
 const {
     authenticateJWT,
-    ensureCorrectUserOrAdmin,
+    ensureCorrectUser,
 } = require("./auth");
 
 
 const { SECRET_KEY } = require("../config");
-const testJwt = jwt.sign({ username: "test", isAdmin: false }, SECRET_KEY);
-const badJwt = jwt.sign({ username: "test", isAdmin: false }, "wrong");
+const passingToken = jwt.sign({ id: 1 }, SECRET_KEY);
+const failingToken = jwt.sign({ id: 1 }, "bad_key");
 
 
 describe("authenticateJWT", function () {
     test("works: via header", function () {
-        expect.assertions(2);
-        //there are multiple ways to pass an authorization token, this is how you pass it in the header.
-        //this has been provided to show you another way to pass the token. you are only expected to read this code for this project.
-        const req = { headers: { authorization: `Bearer ${testJwt}` } };
+        const req = { headers: { authorization: `Bearer ${passingToken}` } };
         const res = { locals: {} };
         const next = function (err) {
             expect(err).toBeFalsy();
         };
         authenticateJWT(req, res, next);
+        // ensures that passing token was de-coded and set into res.locals
         expect(res.locals).toEqual({
             user: {
                 iat: expect.any(Number),
-                username: "test",
-                isAdmin: false,
+                id: 1
             },
         });
     });
 
     test("works: no header", function () {
-        expect.assertions(2);
         const req = {};
         const res = { locals: {} };
         const next = function (err) {
@@ -45,55 +41,46 @@ describe("authenticateJWT", function () {
     });
 
     test("works: invalid token", function () {
-        expect.assertions(2);
-        const req = { headers: { authorization: `Bearer ${badJwt}` } };
+        const req = { headers: { authorization: `Bearer ${failingToken}` } };
         const res = { locals: {} };
+        // not excepting error on failing token
         const next = function (err) {
             expect(err).toBeFalsy();
         };
         authenticateJWT(req, res, next);
+        // ensures that failing token was NOT de-coded and set into res.locals
         expect(res.locals).toEqual({});
     });
 });
 
-describe("ensureCorrectUserOrAdmin", function () {
-    test("works: admin", function () {
-        expect.assertions(1);
+describe("ensureCorrectUser", function () {
+
+    // only testing to ensure middleware doesn't throw error
+    // when given matching param id and token id (from res.locals)
+    test("works: same user", function () {
         const req = { params: { id: "1111" } };
-        const res = { locals: { user: { id: 2222, username: "test_admin", isAdmin: true } } };
+        const res = { locals: { user: { id: 1111 } } };
         const next = function (err) {
             expect(err).toBeFalsy();
         };
-        ensureCorrectUserOrAdmin(req, res, next);
+        ensureCorrectUser(req, res, next);
     });
 
-    test("works: same user, not admin", function () {
-        expect.assertions(1);
+    test("unauth: mismatch", function () {
         const req = { params: { id: "1111" } };
-        const res = { locals: { user: { id: 1111, username: "test_admin", isAdmin: false } } };
-        const next = function (err) {
-            expect(err).toBeFalsy();
-        };
-        ensureCorrectUserOrAdmin(req, res, next);
-    });
-
-    test("unauth: mismatch, not admin", function () {
-        expect.assertions(1);
-        const req = { params: { id: "1111" } };
-        const res = { locals: { user: { id: 2222, username: "test_admin", isAdmin: false } } };
+        const res = { locals: { user: { id: 2222 } } };
         const next = function (err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         };
-        ensureCorrectUserOrAdmin(req, res, next);
+        ensureCorrectUser(req, res, next);
     });
 
     test("unauth: if anon", function () {
-        expect.assertions(1);
         const req = { params: { username: "test" } };
         const res = { locals: {} };
         const next = function (err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         };
-        ensureCorrectUserOrAdmin(req, res, next);
+        ensureCorrectUser(req, res, next);
     });
 });

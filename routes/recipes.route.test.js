@@ -10,8 +10,7 @@ const {
     commonAfterEach,
     commonAfterAll,
     u1Token,
-    u2Token,
-    adminToken,
+    u2Token
 } = require("./_routeTestCommon");
 
 beforeAll(commonBeforeAll);
@@ -27,55 +26,57 @@ const formattedUrlWithNutrients = '/recipes/complex/1?ingredients[]=ham&ingredie
 /************************************** GET /recipes/complex/:id */
 
 describe("GET /recipes/complex/:id", function () {
-    test("correct response without nutrient constraints", async function () {
-        const resp = await request(app)
-            .get(formattedUrlBlankNutrients)
-            .set("authorization", `Bearer ${u1Token}`)
-        // console.log('resp', resp.body)
-        // expect correctly structured response from API
-        expect(resp.body).toEqual({ "number": expect.any(Number), "offset": expect.any(Number), "results": expect.any(Array), "totalResults": expect.any(Number) });
+    // first two tests use real API, don't run unless needed
+    
+    // test("correct response without nutrient constraints", async function () {
+    //     const resp = await request(app)
+    //         .get(formattedUrlBlankNutrients)
+    //         .set("authorization", `Bearer ${u1Token}`)
+    //     // console.log('resp', resp.body)
+    //     // expect correctly structured response from API
+    //     expect(resp.body).toEqual({ "number": expect.any(Number), "offset": expect.any(Number), "results": expect.any(Array), "totalResults": expect.any(Number) });
 
-        // first item in results array contains correctly structured information
-        expect(resp.body.results[0]).toEqual({
-            id: expect.any(Number),
-            usedIngredientCount: expect.any(Number),
-            missedIngredientCount: expect.any(Number),
-            missedIngredients: expect.any(Array),
-            usedIngredients: expect.any(Array),
-            unusedIngredients: expect.any(Array),
-            likes: expect.any(Number),
-            title: expect.any(String),
-            image: expect.any(String),
-            imageType: expect.any(String)
-        })
-    });
+    //     // first item in results array contains correctly structured information
+    //     expect(resp.body.results[0]).toEqual({
+    //         id: expect.any(Number),
+    //         usedIngredientCount: expect.any(Number),
+    //         missedIngredientCount: expect.any(Number),
+    //         missedIngredients: expect.any(Array),
+    //         usedIngredients: expect.any(Array),
+    //         unusedIngredients: expect.any(Array),
+    //         likes: expect.any(Number),
+    //         title: expect.any(String),
+    //         image: expect.any(String),
+    //         imageType: expect.any(String)
+    //     })
+    // });
 
-    test("correct response with nutrient constraints", async function () {
-        const resp = await request(app)
-            .get(formattedUrlWithNutrients)
-            .set("authorization", `Bearer ${u1Token}`)
-        // expect correctly structured response from API
-        expect(resp.body).toEqual({ "number": expect.any(Number), "offset": expect.any(Number), "results": expect.any(Array), "totalResults": expect.any(Number) });
+    // test("correct response with nutrient constraints", async function () {
+    //     const resp = await request(app)
+    //         .get(formattedUrlWithNutrients)
+    //         .set("authorization", `Bearer ${u1Token}`)
+    //     // expect correctly structured response from API
+    //     expect(resp.body).toEqual({ "number": expect.any(Number), "offset": expect.any(Number), "results": expect.any(Array), "totalResults": expect.any(Number) });
 
-        // information returned now contains nutrition object
-        expect(resp.body.results[0]).toEqual({
-            id: expect.any(Number),
-            usedIngredientCount: expect.any(Number),
-            missedIngredientCount: expect.any(Number),
-            missedIngredients: expect.any(Array),
-            usedIngredients: expect.any(Array),
-            unusedIngredients: expect.any(Array),
-            likes: expect.any(Number),
-            title: expect.any(String),
-            image: expect.any(String),
-            imageType: expect.any(String),
-            nutrition: expect.any(Object)
-        })
+    //     // information returned now contains nutrition object
+    //     expect(resp.body.results[0]).toEqual({
+    //         id: expect.any(Number),
+    //         usedIngredientCount: expect.any(Number),
+    //         missedIngredientCount: expect.any(Number),
+    //         missedIngredients: expect.any(Array),
+    //         usedIngredients: expect.any(Array),
+    //         unusedIngredients: expect.any(Array),
+    //         likes: expect.any(Number),
+    //         title: expect.any(String),
+    //         image: expect.any(String),
+    //         imageType: expect.any(String),
+    //         nutrition: expect.any(Object)
+    //     })
 
-        // first recipe has less than 1000 cals.
-        expect(resp.body.results[0].nutrition.nutrients[0].name).toEqual('Calories')
-        expect(resp.body.results[0].nutrition.nutrients[0].amount).toBeLessThan(1000)
-    });
+    //     // first recipe has less than 1000 cals.
+    //     expect(resp.body.results[0].nutrition.nutrients[0].name).toEqual('Calories')
+    //     expect(resp.body.results[0].nutrition.nutrients[0].amount).toBeLessThan(1000)
+    // });
 
     test("400 on blank ingredients", async function () {
         const resp = await request(app)
@@ -153,19 +154,6 @@ describe("GET /recipes/:id", function () {
             .set("authorization", `Bearer ${u2Token}`)
 
         expect(resp.statusCode).toEqual(401);
-    });
-
-    test("admins can view other users recipes", async function () {
-        const resp = await request(app)
-            .get('/recipes/1')
-            .set("authorization", `Bearer ${adminToken}`)
-
-        expect(resp.body).toEqual({
-            "recipes": [
-                { "name": "bacon", "recipe_id": 1234, "ww_points": 10 },
-                { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }
-            ]
-        });
     });
 
 });

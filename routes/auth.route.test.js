@@ -33,7 +33,7 @@ describe("POST /auth/token", function () {
 
         // token contains correct information
         const decoded = jwt.decode(resp.body.token)
-        expect(decoded).toEqual({ username: 'user1', isAdmin: false, id: 1, iat: expect.any(Number) })
+        expect(decoded).toEqual({ id: 1, iat: expect.any(Number) })
     });
 
     test("401 on non-existent user", async function () {
@@ -94,7 +94,7 @@ describe("POST /auth/register", function () {
 
         // token contains correct information
         const decoded = jwt.decode(resp.body.token)
-        expect(decoded).toEqual({ username: 'user7', isAdmin: false, id: expect.any(Number), iat: expect.any(Number) })
+        expect(decoded).toEqual({ id: expect.any(Number), iat: expect.any(Number) })
     });
 
     test("bad request with missing username", async function () {

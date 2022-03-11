@@ -4,12 +4,8 @@ const { SECRET_KEY } = require("../config");
 /** return signed JWT from user data. */
 
 function createToken(user) {
-
-  const payload = {
-    username: user.username,
-    isAdmin: user.isAdmin || false,
-    id : user.id
-  };
+  // user contains the id, username
+  const payload = { id: user.id };
 
   return jwt.sign(payload, SECRET_KEY);
 }

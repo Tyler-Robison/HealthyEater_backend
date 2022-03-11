@@ -9,7 +9,7 @@ const SPOON_API_KEY = require('../secret')
 const router = new express.Router();
 const complexSearch = 'https://api.spoonacular.com/recipes/complexSearch'
 const { formatIngredients } = require('../Support/helpers')
-const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
+const { ensureCorrectUser } = require("../middleware/auth");
 const Recipe = require("../models/recipe");
 
 
@@ -34,10 +34,10 @@ const Recipe = require("../models/recipe");
       imageType: 'jpg'
     }... {more recipes} ]
  *
- * Authorization required: correct user or admin
+ * Authorization required: correct user 
  **/
 
-router.get('/complex/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.get('/complex/:id', ensureCorrectUser, async (req, res, next) => {
     try {
 
         const { ingredients, nutrientObj } = req.query
@@ -83,10 +83,10 @@ router.get('/complex/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
  *
  * Returns  { nutrition, recipe }
  *
- * Authorization required:  admin or same user as :id
+ * Authorization required:  same user as :id
  **/
 
-router.get('/detail/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.get('/detail/:id', ensureCorrectUser, async (req, res, next) => {
     try {
         const { recipeId } = req.query
         // ensures recipeId is an integer
@@ -97,8 +97,7 @@ router.get('/detail/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
         const recipeDetail = axiosRes.data
         const nutritionRes = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/nutritionWidget.json?apiKey=${SPOON_API_KEY}`)
         const nutritionDetail = nutritionRes.data
-        // console.log('nutrition info', nutritionRes.data)
-        // console.log('axios res recDetail', recipeDetail)
+     
         return res.json({ recipe: recipeDetail, nutrition: nutritionDetail })
     } catch (err) {
         return next(err)
@@ -114,9 +113,9 @@ router.get('/detail/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
  *      { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }]
  * }
  *
- * Authorization required:   admin or same user as :id
+ * Authorization required:   same user as :id
  **/
-router.get('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.get('/:id', ensureCorrectUser, async (req, res, next) => {
     // gets all saved recipes for a given user
     try {
 
@@ -137,9 +136,9 @@ router.get('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
  *      { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }]
  * }
  *
- * Authorization required:   admin or same user as :id
+ * Authorization required:   same user as :id
  **/
-router.post('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.post('/:id', ensureCorrectUser, async (req, res, next) => {
     try {
         const validator = jsonschema.validate(req.body, saveRecipeSchema);
         if (!validator.valid) {
@@ -169,15 +168,15 @@ router.post('/:id', ensureCorrectUserOrAdmin, async (req, res, next) => {
  *      { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }]
  * }
  *
- * Authorization required:  admin or same user as :id
+ * Authorization required:  same user as :id
  **/
-router.delete('/:id/:recipeId', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.delete('/:id/:recipeId', ensureCorrectUser, async (req, res, next) => {
     try {
         const { id, recipeId } = req.params
         // removes from join table
-        const deleteRes = await Recipe.remove(recipeId, id)
+        const recipeRes = await Recipe.remove(recipeId, id)
         // console.log('delete', deleteRes)
-        return res.status(204).json({ deleted: deleteRes });
+        return res.status(200).json({deletedRecipe: recipeRes});
     } catch (err) {
         return next(err);
     }

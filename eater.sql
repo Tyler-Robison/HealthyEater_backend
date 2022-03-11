@@ -5,8 +5,6 @@ DROP DATABASE IF EXISTS eater;
 CREATE DATABASE eater;
 \connect eater
 
-DROP TABLE IF EXISTS users;
-
 \i eater-schema.sql
 \i eater-seed.sql
 
@@ -16,8 +14,6 @@ DROP TABLE IF EXISTS users;
 DROP DATABASE IF EXISTS eater_test;
 CREATE DATABASE eater_test;
 \connect eater_test
-
-DROP TABLE IF EXISTS users;
 
 \i eater-schema.sql
 

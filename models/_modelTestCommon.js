@@ -13,10 +13,9 @@ async function commonBeforeAll() {
 
   await db.query(`
     INSERT INTO users(username,
-                      password,
-                      is_admin)
-    VALUES ('user1', $1, false),
-           ('user2', $2, true)`,
+                      password)
+    VALUES ('user1', $1),
+           ('user2', $2)`,
     [
       await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
       await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),

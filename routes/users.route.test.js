@@ -10,8 +10,7 @@ const {
     commonAfterEach,
     commonAfterAll,
     u1Token,
-    u2Token,
-    adminToken,
+    u2Token
 } = require("./_routeTestCommon");
 
 beforeAll(commonBeforeAll);
@@ -22,39 +21,7 @@ afterAll(commonAfterAll);
 /************************************** GET /users/:id */
 
 describe("GET /users/:id", function () {
-    test("works for admin", async function () {
-        const resp = await request(app)
-            .get(`/users/1`)
-            .set("authorization", `Bearer ${adminToken}`);
-        expect(resp.body).toEqual({
-            user: {
-                id: 1,
-                username: "user1",
-                isAdmin: false,
-                mealplan: [
-                    {
-                        day: "Mon",
-                        id: 1,
-                        name: "bacon",
-                        recipe_id: 1234,
-                        ww_points: 10,
-                    },
-                    {
-                        day: "Tues",
-                        id: 2,
-                        name: "eggs",
-                        recipe_id: 5678,
-                        ww_points: 20,
-                    },
-                ],
-                points: null,
-                recipes: [
-                    { "name": "bacon", "recipe_id": 1234, "ww_points": 10 },
-                    { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }
-                ]
-            },
-        });
-    });
+
 
     test("works for same user", async function () {
         const resp = await request(app)
@@ -64,7 +31,6 @@ describe("GET /users/:id", function () {
             user: {
                 id: 1,
                 username: "user1",
-                isAdmin: false,
                 mealplan: [
                     {
                         day: "Mon",
@@ -103,30 +69,18 @@ describe("GET /users/:id", function () {
         expect(resp.statusCode).toEqual(401);
     });
 
-    test("not found if user not found", async function () {
-        const resp = await request(app)
-            .get(`/users/1234`)
-            .set("authorization", `Bearer ${adminToken}`);
-        expect(resp.statusCode).toEqual(404);
-    });
-
 });
 
 /************************************** DELETE /users/:id */
 
 describe("DELETE /users/:id", function () {
-    test("works for admin", async function () {
-        const resp = await request(app)
-            .delete(`/users/1`)
-            .set("authorization", `Bearer ${adminToken}`);
-        expect(resp.body).toEqual({ deleted: "1" });
-    });
 
     test("works for same user", async function () {
         const resp = await request(app)
             .delete(`/users/1`)
             .set("authorization", `Bearer ${u1Token}`);
-        expect(resp.body).toEqual({ deleted: "1" });
+        expect(resp.statusCode).toEqual(204);
+        expect(resp.body).toEqual({});
     });
 
     test("unauth if not same user", async function () {
@@ -140,13 +94,6 @@ describe("DELETE /users/:id", function () {
         const resp = await request(app)
             .delete(`/users/1`);
         expect(resp.statusCode).toEqual(401);
-    });
-
-    test("not found if user missing", async function () {
-        const resp = await request(app)
-            .delete(`/users/1234`)
-            .set("authorization", `Bearer ${adminToken}`);
-        expect(resp.statusCode).toEqual(404);
     });
 
 });

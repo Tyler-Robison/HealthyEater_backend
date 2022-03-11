@@ -29,8 +29,7 @@ describe("authenticate", function () {
         const user = await User.authenticate("user1", "password1");
         expect(user).toEqual({
             id: expect.any(Number),
-            username: "user1",
-            isAdmin: false,
+            username: "user1"
         });
     });
 
@@ -57,32 +56,14 @@ describe("register", function () {
     test("registers new user", async function () {
         const hashedPassword = await bcrypt.hash('password', BCRYPT_WORK_FACTOR);
 
-        const user = await User.register({ username: 'user3', password: hashedPassword, isAdmin: false })
+        const user = await User.register({ username: 'user3', password: hashedPassword })
         expect(user).toEqual({
             id: expect.any(Number),
-            username: "user3",
-            isAdmin: false,
+            username: "user3"
         });
 
         const found = await db.query("SELECT * FROM users WHERE username = 'user3'");
         expect(found.rows.length).toEqual(1);
-        expect(found.rows[0].is_admin).toEqual(false);
-        expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
-    });
-
-    test("Can create an admin", async function () {
-        const hashedPassword = await bcrypt.hash('password', BCRYPT_WORK_FACTOR);
-
-        const user = await User.register({ username: 'user3', password: hashedPassword, isAdmin: true })
-        expect(user).toEqual({
-            id: expect.any(Number),
-            username: "user3",
-            isAdmin: true,
-        });
-
-        const found = await db.query("SELECT * FROM users WHERE username = 'user3'");
-        expect(found.rows.length).toEqual(1);
-        expect(found.rows[0].is_admin).toEqual(true);
         expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
     });
 
@@ -90,7 +71,7 @@ describe("register", function () {
         const hashedPassword = await bcrypt.hash('password', BCRYPT_WORK_FACTOR);
 
         try {
-            await User.register({ password: hashedPassword, isAdmin: false })
+            await User.register({ password: hashedPassword })
             fail();
         } catch (err) {
             // 23502 = NOT NULL VIOLATION
@@ -102,7 +83,7 @@ describe("register", function () {
         const hashedPassword = await bcrypt.hash('password', BCRYPT_WORK_FACTOR);
 
         try {
-            await User.register({ username: 'user1', password: hashedPassword, isAdmin: false })
+            await User.register({ username: 'user1', password: hashedPassword})
             fail();
         } catch (err) {
             expect(err instanceof BadRequestError).toBeTruthy();
@@ -116,8 +97,8 @@ describe("findAll", function () {
     test("finds all users", async function () {
         const users = await User.findAll();
         expect(users).toEqual([
-            { id: expect.any(Number), username: "user1", isAdmin: false },
-            { id: expect.any(Number), username: "user2", isAdmin: true },
+            { id: expect.any(Number), username: "user1" },
+            { id: expect.any(Number), username: "user2" },
         ]);
     });
 });
@@ -128,7 +109,7 @@ describe("get", function () {
     test("gets a specific user", async function () {
         const user = await User.get(1);
         expect(user).toEqual(
-            { id: expect.any(Number), username: "user1", isAdmin: false, points: null });
+            { id: expect.any(Number), username: "user1", points: null });
     });
 
     test("not found err on invalid user id", async function () {

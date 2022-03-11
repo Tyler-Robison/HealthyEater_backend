@@ -100,7 +100,7 @@ describe("DELETE meals/:id/:meal_id", function () {
             .set("authorization", `Bearer ${u1Token}`)
 
         // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(201);
+        expect(resp.statusCode).toEqual(204);
     });
 
     test("401 on wrong user", async function () {
@@ -123,6 +123,30 @@ describe("DELETE meals/:id/:meal_id", function () {
 
 });
 
+/************************************** DELETE /meals/:id */
+
+describe("DELETE meals/:id", function () {
+
+    test("Can delete ALL meals for a user", async function () {
+        const resp = await request(app)
+            .delete('/meals/1')
+            .set("authorization", `Bearer ${u1Token}`)
+
+        // expect correctly structured response from API
+        expect(resp.statusCode).toEqual(204);
+    });
+
+    test("401 on wrong user", async function () {
+        const resp = await request(app)
+            .delete('/meals/2')
+            .set("authorization", `Bearer ${u1Token}`)
+
+        // expect correctly structured response from API
+        expect(resp.statusCode).toEqual(401);
+    });
+
+});
+
 /************************************** PATCH /meals/:id */
 
 describe("PATCH meals/:id", function () {
@@ -136,7 +160,7 @@ describe("PATCH meals/:id", function () {
             });
 
         // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(200);
+        expect(resp.statusCode).toEqual(204);
     });
 
     test("401 on wrong user", async function () {

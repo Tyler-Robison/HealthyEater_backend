@@ -3,8 +3,7 @@
 const db = require("../db");
 const {
     NotFoundError,
-    BadRequestError,
-    UnauthorizedError,
+    BadRequestError
 } = require("../expressError");
 
 /** Related functions for mealplan. */
@@ -30,7 +29,15 @@ class MealPlan {
             [id, recipe_id, day]
         )
 
-        return result.rows[0]
+        // need to return associated recipeInfo to front-end
+        // so that currentUser.mealplan can be updated
+        const recipeInfo = await db.query(
+            `SELECT ww_points, name
+            FROM recipes
+            WHERE recipe_id = $1`, [recipe_id]
+        )
+
+        return {result: result.rows[0], recipeInfo: recipeInfo.rows[0]}
     }
 
     static async getMealPlan(id) {

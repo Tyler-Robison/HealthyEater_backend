@@ -4,12 +4,10 @@ const db = require("../db.js");
 
 const {
     NotFoundError,
-    BadRequestError,
-    UnauthorizedError,
+    BadRequestError
 } = require("../expressError");
 
-const User = require('./user.js')
-const Recipe = require('./recipe.js')
+
 const MealPlan = require('./mealPlan.js')
 
 const {
@@ -24,15 +22,9 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
+/************************************** createMealPlan */
 
-// INSERT INTO mealplan(recipe_id, user_id, day)
-// (1111, 1, 'Mon'), 
-// (1111, 1, 'Tues), 
-// (2222, 1, 'Tues'), 
-// (1111, 1, 'Wed')`);
-
-// create meal plan
-describe("save recipe", function () {
+describe("Create Mealplan", function () {
     test("Can create a mealplan row", async function () {
         await MealPlan.createMealPlan(1, 2222, 'Thurs')
 
@@ -69,7 +61,8 @@ describe("save recipe", function () {
     });
 });
 
-// geat meal plan
+/************************************** getMealPlan */
+
 describe("get mealplan", function () {
     test("can get the meal plan for a given user", async function () {
         const mealplan = await MealPlan.getMealPlan(1)
@@ -91,7 +84,7 @@ describe("get mealplan", function () {
     });
 });
 
-// delete mealplan row
+/************************************** deleteMealPlan */
 describe("delete mealplan", function () {
     test("can delete rows in mealplan", async function () {
         const mealplan = await MealPlan.getMealPlan(1)
@@ -125,7 +118,7 @@ describe("delete mealplan", function () {
     });
 });
 
-// delete user mealplan
+/************************************** deleteUserMeals */
 describe("deletes entire mealplan for a given user", function () {
     test("can delete rows in mealplan", async function () {
         const mealplan = await MealPlan.getMealPlan(1)

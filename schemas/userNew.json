@@ -12,9 +12,6 @@
       "type": "string",
       "minLength": 5,
       "maxLength": 20
-    },
-    "isAdmin": {
-      "type": "boolean"
     }
   },
   "additionalProperties": false,
