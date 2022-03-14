@@ -61,8 +61,9 @@ router.post('/:id', ensureCorrectUser, async (req, res, next) => {
 router.delete('/:id/:meal_id', ensureCorrectUser, async (req, res, next) => {
     try {
         const { meal_id } = req.params
-        await MealPlan.deleteMeal(meal_id)
-        return res.status(204).json({});
+        console.log('meal id', meal_id)
+        const deleteRes = await MealPlan.deleteMeal(meal_id)
+        return res.status(200).json(deleteRes);
     } catch (err) {
         return next(err)
     }

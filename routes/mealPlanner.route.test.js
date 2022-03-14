@@ -35,9 +35,14 @@ describe("POST meals/:id", function () {
         // expect correctly structured response from API
         expect(resp.status).toEqual(201)
         expect(resp.body).toEqual({
-            day: "Wed",
-            id: 1,
-            recipe_id: 1234,
+            mealplannerRow: {
+                day: "Wed",
+                // mealplan already has 2 meals in it, so expect id 3
+                id: 3,
+                recipe_id: 1234,
+                ww_points: 10,
+                name: 'bacon'
+            }
         });
     });
 
@@ -100,7 +105,7 @@ describe("DELETE meals/:id/:meal_id", function () {
             .set("authorization", `Bearer ${u1Token}`)
 
         // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(204);
+        expect(resp.statusCode).toEqual(200);
     });
 
     test("401 on wrong user", async function () {
@@ -160,7 +165,7 @@ describe("PATCH meals/:id", function () {
             });
 
         // expect correctly structured response from API
-        expect(resp.statusCode).toEqual(204);
+        expect(resp.statusCode).toEqual(200);
     });
 
     test("401 on wrong user", async function () {

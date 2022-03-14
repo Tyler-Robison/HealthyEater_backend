@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { createToken } = require("./tokens");
 const { SECRET_KEY } = require("../config");
 
+
 describe("createToken", function () {
   test("Creates token when given correct input", function () {
     const token = createToken({ username: "test", id: 1 });

@@ -25,7 +25,7 @@ class MealPlan {
             `INSERT INTO user_mealplan
                 (user_id, recipe_id, day)
                 VALUES ($1, $2, $3) 
-                RETURNING user_id AS "id", recipe_id, day`,
+                RETURNING id, recipe_id, day`,
             [id, recipe_id, day]
         )
 
@@ -58,6 +58,7 @@ class MealPlan {
         return result.rows
     }
 
+    // id is primary key in user_mealplan table
     static async deleteMeal(id) {
 
         const result = await db.query(
@@ -71,6 +72,8 @@ class MealPlan {
         const deleted = result.rows[0];
 
         if (!deleted) throw new NotFoundError(`No id: ${id}`);
+
+        return result.rows[0]
     }
 
     static async deleteUserMeals(userId) {
