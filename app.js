@@ -26,11 +26,6 @@ app.use("/recipes", recipeRoutes);
 app.use("/meals", mealRoutes)
 
 
-// ASK TA QUESTION ABOUT dotenv.config()
-// ASK TA QUESTION ABOUT dotenv.config()
-// ASK TA QUESTION ABOUT dotenv.config()
-
-
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
