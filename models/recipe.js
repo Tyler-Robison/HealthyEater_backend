@@ -39,10 +39,19 @@ class Recipe {
             RETURNING recipe_id, ww_points, name`,
                 [name, recipeId, wwPoints]
             )
-            savedRecipe = result.rows[0]
+
+            // even if recipe is duplicated still need the information
+        } else {
+            result = await db.query(
+                `SELECT name, ww_points, recipe_id 
+                FROM recipes
+                WHERE recipe_id = $1`, [recipeId]
+            )
         }
 
-  
+        savedRecipe = result.rows[0]
+
+
 
 
 
