@@ -14,6 +14,20 @@ Recipe Search is performed by integration with the [Spoontacular API](https://sp
 
 While the Spoontacular API does have a mealplanning feature, I chose to instead build my own mealplanner from the ground up. 
 
+## User Flow
+
+Upon visit the site, non signed-in users will be directed to the login and registration pages. After Entering a username/password users will have access to the entire site, the homepage will recommend searching for recipes before doing anything else. 
+
+Once in recipe search users will enter ingredients one at a time and then click "Get Recipes" to see their results. Optionally, users can add nutritional constraints to the search. 
+
+User will be re-directed to a page containing their search results. From there, they can view additional detail about any recipe that interests them. 
+
+From the recipe detail page users will see in-depth information about that recipe and have the option to save the recipe if they choose to.
+
+With at least one recipe saved users can now visit Saved Recipes, where they can view and delete their saved recipes. 
+
+They can also now visit the mealplanner, which allows them to enter their saved meals into a weekly planner.
+
 ## Healthy Eater front-end components
 
 1) **Register/login/logout** - for handling user authentication and authorization. Username/Password are all that is required. 
