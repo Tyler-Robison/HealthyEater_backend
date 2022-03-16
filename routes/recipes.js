@@ -46,10 +46,10 @@ router.get('/complex/:id', ensureCorrectUser, async (req, res, next) => {
         const formattedNutrients = JSON.parse(nutrientObj)
 
         // constructs URL nutrient string, skips any nutrients user didn't include in form. 
-        // &calories=800&sodium=600
+        // example: &calories=800&sodium=600
         const nutrientArr = [];
         for (const [key, value] of Object.entries(formattedNutrients)) {
-            // if nutrient form isn't touched values will be null. 
+            // if nutrient form isn't touched, values will be null. 
             // blank string if nutrient form submitted with blank fields. 
             if (value !== '' && value !== null) {
                 nutrientArr.push(`&${key}=${value}`)
@@ -57,18 +57,13 @@ router.get('/complex/:id', ensureCorrectUser, async (req, res, next) => {
         }
 
         const nutrientStr = nutrientArr.join('');
-        const numResults = 5;
+        const numResults = 10;
         const formattedIngredients = formatIngredients(ingredients);
-        let axiosRes
+ 
         // handles empty nutrient string if user doesn't filter by any min/max nutrients. 
-        if (nutrientStr.length === 0) {
-            axiosRes = await axios.get(`${complexSearch}?includeIngredients=${formattedIngredients}&number=${numResults}&fillIngredients=true&apiKey=${SPOON_API_KEY}`)
-        } else {
-            axiosRes = await axios.get(`${complexSearch}?includeIngredients=${formattedIngredients}${nutrientStr}&number=${numResults}&fillIngredients=true&apiKey=${SPOON_API_KEY}`)
-        }
-
-        console.log('ingred', ingredients)
-        console.log('form', formattedIngredients)
+        const axiosRes = (nutrientStr.length === 0 ? 
+            await axios.get(`${complexSearch}?includeIngredients=${formattedIngredients}&number=${numResults}&fillIngredients=true&apiKey=${SPOON_API_KEY}`) :
+            await axios.get(`${complexSearch}?includeIngredients=${formattedIngredients}${nutrientStr}&number=${numResults}&fillIngredients=true&apiKey=${SPOON_API_KEY}`))
 
         const recipes = axiosRes.data
         return res.json(recipes)

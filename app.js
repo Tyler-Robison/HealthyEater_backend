@@ -1,7 +1,5 @@
 "use strict";
 
-/** Express app for jobly. */
-
 const express = require("express");
 const cors = require("cors");
 
@@ -20,9 +18,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
 app.use(authenticateJWT);
 
+/** routes related to user auth */
 app.use("/auth", authRoutes);
+
+/** Get user info and delete user account */
 app.use("/users", userRoutes);
+
+/** Routes that get recipe info from Spoontacular API and manage user recipes */
 app.use("/recipes", recipeRoutes);
+
+/** routes related to user mealplan */
 app.use("/meals", mealRoutes)
 
 

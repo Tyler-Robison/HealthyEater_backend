@@ -49,7 +49,7 @@ class User {
 
   /** Register user with data.
    *
-   * Returns { id, username }
+   * Returns { username, id }
    *
    * Throws BadRequestError on duplicates.
    **/
@@ -100,9 +100,9 @@ class User {
     return result.rows;
   }
 
-  /** Given a username, return data about a specific user.
+  /** Given an id, return data about a specific user.
    *
-   * Returns { username }
+   * Returns { id, username, points }
    *
    * Throws NotFoundError if user not found.
    **/
@@ -123,6 +123,13 @@ class User {
     return user;
   }
 
+    /** Updates user table to include points value
+   *
+   * Returns { id, points }
+   *
+   * Throws NotFoundError if user not found.
+   **/
+
   static async setPoints(id, data) {
     const result = await db.query(`UPDATE users 
                       SET points = $2
@@ -135,7 +142,13 @@ class User {
     return result.rows[0]
   }
 
-  /** Delete given user from database; returns 	"deleted": user_name */
+
+      /** Delete user based on id
+   *
+   * returns "deleted": id 
+   *
+   * Throws NotFoundError if user not found.
+   **/
 
   static async remove(id) {
     let result = await db.query(

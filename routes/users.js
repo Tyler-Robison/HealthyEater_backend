@@ -34,9 +34,7 @@ router.get("/:id", ensureCorrectUser, async function (req, res, next) {
     const user = await User.get(id);
     const userMealplan = await MealPlan.getMealPlan(id);
     const recipeRes = await Recipe.getRecipes(id);
-    // console.log('user', user)
-    // console.log('user mealplan', userMealplan)
-    // console.log('user recipes', recipeRes)
+
     user.mealplan = userMealplan
     user.recipes = recipeRes
     return res.json({ user });

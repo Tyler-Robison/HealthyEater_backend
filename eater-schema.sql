@@ -1,4 +1,4 @@
--- Contains user auth info in addition to points allotment. 
+-- Contains user auth info and points allotment. 
 -- points won't exist after registration, 
 -- user needs to submit calculate points form to have a points value.
 CREATE TABLE users (
@@ -15,8 +15,7 @@ CREATE TABLE recipes (
   ww_points INTEGER
 );
 
--- saved recipes associated with a single user
--- differnt users can have same recipe
+-- JOIN table to handle users-recipes Many-to-Many relationship
 CREATE TABLE users_recipes (
   recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE,
   user_id INTEGER REFERENCES users ON DELETE CASCADE,

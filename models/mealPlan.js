@@ -10,8 +10,14 @@ const {
 
 class MealPlan {
 
+    /** Checks that user and recipe both exist and day is valid
+* 
+*  creates new mealplan row consisting of user_id, recipe_id and day
+* 
+*  returns id, recipe_id, day, ww_points, name
+*/
     static async createMealPlan(id, recipe_id, day) {
-        // check that user and recipe both exist
+        
         const user = await db.query(`SELECT * FROM users WHERE id = $1`, [id])
         if (user.rowCount === 0) throw new NotFoundError(`No user: ${id}`);
 
@@ -37,9 +43,15 @@ class MealPlan {
             WHERE recipe_id = $1`, [recipe_id]
         )
 
-        return {result: result.rows[0], recipeInfo: recipeInfo.rows[0]}
+        return { result: result.rows[0], recipeInfo: recipeInfo.rows[0] }
     }
 
+        /** gets a user's mealplan
+* 
+*  Throws NotFoundError if user not found.
+* 
+*  returns id, recipe_id, day, ww_points, name
+*/
     static async getMealPlan(id) {
 
         const user = await db.query(`SELECT * FROM users WHERE id = $1`, [id])
@@ -57,8 +69,12 @@ class MealPlan {
 
         return result.rows
     }
-
-    // id is primary key in user_mealplan table
+        /** deletes individual row of user's mealplan based on provided id
+* 
+*  Throws NotFoundError if id not found.
+* 
+*  returns id
+*/
     static async deleteMeal(id) {
 
         const result = await db.query(
@@ -76,6 +92,10 @@ class MealPlan {
         return result.rows[0]
     }
 
+            /** deletes ALL rows of user's mealplan based on userId
+* 
+*  Throws NotFoundError if userId not found.
+*/
     static async deleteUserMeals(userId) {
 
         const user = await db.query(`SELECT * FROM users WHERE id = $1`, [userId])

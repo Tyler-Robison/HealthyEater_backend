@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
+// inserts 2 users, 2 recipes, 2 join table rows and 4 mealplans
+// reset primary keys to 1 where needed
 async function commonBeforeAll() {
   await db.query("DELETE FROM users");
   await db.query("ALTER SEQUENCE users_id_seq RESTART WITH 1");
