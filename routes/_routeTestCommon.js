@@ -6,6 +6,8 @@ const Recipe = require('../models/recipe')
 const MealPlan = require('../models/mealPlan')
 const { createToken } = require("../helpers/tokens");
 
+// creates 2 users, 2 recipes, and 2 mealplans
+// reset primary keys to 1 where needed
 async function commonBeforeAll() {
     await db.query("DELETE FROM users");
     await db.query("ALTER SEQUENCE users_id_seq RESTART WITH 1");

@@ -34,7 +34,7 @@ const Recipe = require("../models/recipe");
       imageType: 'jpg'
     }... {more recipes} ]
  *
- * Authorization required: correct user 
+ * Authorization required: user id matches :id
  **/
 
 router.get('/complex/:id', ensureCorrectUser, async (req, res, next) => {
@@ -74,11 +74,10 @@ router.get('/complex/:id', ensureCorrectUser, async (req, res, next) => {
 })
 
 /** GET recipes/detail/:id => { recipeId }
-
  *
  * Returns  { nutrition, recipe }
  *
- * Authorization required:  same user as :id
+ * Authorization required:  user id matches :id
  **/
 
 router.get('/detail/:id', ensureCorrectUser, async (req, res, next) => {
@@ -108,10 +107,9 @@ router.get('/detail/:id', ensureCorrectUser, async (req, res, next) => {
  *      { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }]
  * }
  *
- * Authorization required:   same user as :id
+ * Authorization required:  user id matches :id
  **/
 router.get('/:id', ensureCorrectUser, async (req, res, next) => {
-    // gets all saved recipes for a given user
     try {
 
         const userId = req.params.id
@@ -131,7 +129,7 @@ router.get('/:id', ensureCorrectUser, async (req, res, next) => {
  *      { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }]
  * }
  *
- * Authorization required:   same user as :id
+ * Authorization required:   user id matches :id
  **/
 router.post('/:id', ensureCorrectUser, async (req, res, next) => {
     try {
@@ -154,7 +152,7 @@ router.post('/:id', ensureCorrectUser, async (req, res, next) => {
     }
 })
 
-/** DELETE /recipes/:id => { recipeDetail }
+/** DELETE /recipes/:id/:recipeId => { deletedRecipe }
 
  *
  * Returns  {
@@ -163,14 +161,14 @@ router.post('/:id', ensureCorrectUser, async (req, res, next) => {
  *      { "name": "eggs", "recipe_id": 5678, "ww_points": 20 }]
  * }
  *
- * Authorization required:  same user as :id
+ * Authorization required: user id matches :id
  **/
 router.delete('/:id/:recipeId', ensureCorrectUser, async (req, res, next) => {
     try {
         const { id, recipeId } = req.params
-        // removes from join table
+       
         const recipeRes = await Recipe.remove(recipeId, id)
-        // console.log('delete', deleteRes)
+    
         return res.status(200).json({deletedRecipe: recipeRes});
     } catch (err) {
         return next(err);

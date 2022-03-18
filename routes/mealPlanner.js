@@ -21,7 +21,7 @@ const mealplanSchema = require("../schemas/mealplan.json");
  *      inserts meal into mealplan based on recipeID
  *      returns all info needed by mealplanner
  *
- * Authorization required: same user as :id
+ * Authorization required: user id matches :id
  **/
 
 router.post('/:id', ensureCorrectUser, async (req, res, next) => {
@@ -34,9 +34,7 @@ router.post('/:id', ensureCorrectUser, async (req, res, next) => {
 
         const id = req.params.id
         const { recipe_id, day } = req.body
-        // console.log('id', id)
-        // console.log('recipe id', recipe_id)
-        // console.log('day', day)
+
         const mealRes = await MealPlan.createMealPlan(id, recipe_id, day)
         
         const mealplannerRow = {
@@ -53,16 +51,16 @@ router.post('/:id', ensureCorrectUser, async (req, res, next) => {
     }
 })
 
-/** DELETE meals/:id/:meal_id  =>  { deleted: meal_id }
+/** DELETE meals/:id/:mealId  =>  { deleted: meal_id }
  *
- * Authorization required: same user as :id
+ * Authorization required: user id matches :id
  **/
 
-router.delete('/:id/:meal_id', ensureCorrectUser, async (req, res, next) => {
+router.delete('/:id/:mealId', ensureCorrectUser, async (req, res, next) => {
     try {
-        const { meal_id } = req.params
-        console.log('meal id', meal_id)
-        const deleteRes = await MealPlan.deleteMeal(meal_id)
+        const { mealId } = req.params
+        console.log('meal id', mealId)
+        const deleteRes = await MealPlan.deleteMeal(mealId)
         return res.status(200).json(deleteRes);
     } catch (err) {
         return next(err)
@@ -73,7 +71,7 @@ router.delete('/:id/:meal_id', ensureCorrectUser, async (req, res, next) => {
  * 
  * Route for deleting ALL meals for a given user
  *
- * Authorization required: same user as :id
+ * Authorization required: user id matches :id
  **/
 
 router.delete('/:id', ensureCorrectUser, async (req, res, next) => {
@@ -88,7 +86,7 @@ router.delete('/:id', ensureCorrectUser, async (req, res, next) => {
 
 /** PATCH meals/:id  =>  { points: pointsRes }
  *
- * Authorization required: same user as :id
+ * Authorization required: user id matches :id
  **/
 
 router.patch('/:id', ensureCorrectUser, async (req, res, next) => {

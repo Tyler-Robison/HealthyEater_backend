@@ -25,7 +25,7 @@ const router = express.Router();
  *
  * Returns { user }
  *
- * Authorization required: same id as :id
+ * Authorization required: user id matches :id
  **/
 
 router.get("/:id", ensureCorrectUser, async function (req, res, next) {
@@ -44,9 +44,9 @@ router.get("/:id", ensureCorrectUser, async function (req, res, next) {
 });
 
 
-/** DELETE users/[id]  =>  { deleted: id }
+/** DELETE users/:id  =>  { }
  *
- * Authorization required: same user as :id
+ * Authorization required: user id matches :id
  **/
 
 router.delete("/:id", ensureCorrectUser, async function (req, res, next) {

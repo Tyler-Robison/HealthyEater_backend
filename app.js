@@ -21,7 +21,7 @@ app.use(authenticateJWT);
 /** routes related to user auth */
 app.use("/auth", authRoutes);
 
-/** Get user info and delete user account */
+/** routes for getting user info and account deletion */
 app.use("/users", userRoutes);
 
 /** Routes that get recipe info from Spoontacular API and manage user recipes */

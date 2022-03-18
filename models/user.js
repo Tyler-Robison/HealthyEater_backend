@@ -47,7 +47,7 @@ class User {
     throw new UnauthorizedError("Invalid username/password");
   }
 
-  /** Register user with data.
+  /** Register user with given username + password.
    *
    * Returns { username, id }
    *
@@ -87,7 +87,7 @@ class User {
 
   /** Find all users.
    *
-   * Returns [{ username }, ...]
+   * Returns [{ id, username }, ...]
    **/
 
   static async findAll() {
@@ -130,11 +130,11 @@ class User {
    * Throws NotFoundError if user not found.
    **/
 
-  static async setPoints(id, data) {
+  static async setPoints(id, points) {
     const result = await db.query(`UPDATE users 
                       SET points = $2
                       WHERE id = $1 
-                      RETURNING id, points`, [id, data]);
+                      RETURNING id, points`, [id, points]);
 
     const user = result.rows[0];
 
