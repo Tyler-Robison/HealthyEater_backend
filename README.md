@@ -121,7 +121,7 @@ Runs all tests
 ### `npm test <filename>`
 Runs a specific test suite
 
-**Warning:** When running all tests in backend via npm test, you will sometimes get an error "expected password, got response 88" 
-This can be fixed by running the failing test suite individually then running all tests again. The failing test suite will always be tokens.test.js or auth.test.js
+**Warning:** When running all tests in backend via npm test, you will sometimes get an error "expected password response, got message type 88" 
+This can be fixed by running the failing test suite individually then running all tests again. The failing test suite will almost always be tokens.test.js or auth.test.js
 
 Any comments or questions can be sent to tylerobison758758@gmail.com

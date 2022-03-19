@@ -36,6 +36,19 @@ describe("Create Mealplan", function () {
         ])
     });
 
+    test("Can have mealplans with duplicate information", async function () {
+        await MealPlan.createMealPlan(1, 2222, 'Thurs')
+        await MealPlan.createMealPlan(1, 2222, 'Thurs')
+
+        const created_mealplan = await db.query(`SELECT * FROM user_mealplan
+        WHERE day='Thurs'`)
+
+        expect(created_mealplan.rows).toEqual([
+            { id: expect.any(Number), user_id: 1, recipe_id: 2222, day: 'Thurs' },
+            { id: expect.any(Number), user_id: 1, recipe_id: 2222, day: 'Thurs' }
+        ])
+    });
+
     test("Not found error on bad user id", async function () {
         try {
             await MealPlan.createMealPlan(999999, 2222, 'Mon')

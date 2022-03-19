@@ -31,7 +31,6 @@ class Recipe {
         // if any user has already put recipe in db
         // don't add again
         let result;
-        let savedRecipe;
         if (!isDuplicateRecipe) {
             result = await db.query(
                 `INSERT INTO recipes
@@ -43,7 +42,7 @@ class Recipe {
                 [name, recipeId, wwPoints]
             )
 
-            // even if recipe is duplicated still need the information
+            // even if recipe is already in recipes table still need the information
         } else {
             result = await db.query(
                 `SELECT name, ww_points, recipe_id 
@@ -52,7 +51,7 @@ class Recipe {
             )
         }
 
-        savedRecipe = result.rows[0]
+        const savedRecipe = result.rows[0]
 
         // check if currUser has already saved this recipe
         // can still add to join table even if recipe wasn't added to recipes table
@@ -63,20 +62,15 @@ class Recipe {
             [recipeId, userId],
         );
 
-        let isDuplicateRow = false
+        // this error will only throw if recipe is already in recipes and users_recipes
+        if (duplicateCheck2.rows[0]) throw new BadRequestError(`Duplicate userId/recipeId: ${userId} ${recipeId}`);
 
-        if (duplicateCheck2.rows[0]) {
-            isDuplicateRow = true;
-            throw new BadRequestError(`Duplicate userId/recipeId: ${userId} ${recipeId}`);
-        }
 
-        if (!isDuplicateRow) {
-            await db.query(
-                `INSERT INTO users_recipes (user_id, recipe_id)
+        await db.query(
+            `INSERT INTO users_recipes (user_id, recipe_id)
             VALUES ($1, $2)`,
-                [userId, recipeId]
-            )
-        }
+            [userId, recipeId]
+        )
 
         return savedRecipe
     }
@@ -98,12 +92,9 @@ class Recipe {
         return savedRecipes
     }
 
-    /** removes recipe from a user's personal saved recipes (users_recipes)
+    /** removes recipe from a user's saved recipes (users_recipes)
  * 
- *  still exists in recipes table, deleting recipe there 
- * 
- *  would cascade to ALL users saved recipes
- */
+ *  deleting from recipes table would cascade to ALL users saved recipes */
     static async remove(recipeId, userId) {
         const result = await db.query(
             `DELETE FROM users_recipes 

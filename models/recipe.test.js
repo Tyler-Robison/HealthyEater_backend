@@ -4,8 +4,7 @@ const db = require("../db.js");
 
 const {
     NotFoundError,
-    BadRequestError,
-    UnauthorizedError,
+    BadRequestError
 } = require("../expressError");
 
 const Recipe = require('./recipe.js')
@@ -22,7 +21,7 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-// save recipe
+/************************************** save recipe */
 
 describe("save recipe", function () {
     test("Can save a recipe to a user", async function () {
@@ -53,7 +52,7 @@ describe("save recipe", function () {
     });
 });
 
-// get recipes
+/************************************** get recipes */
 
 describe("getRecipes", function () {
     test("Can get all recipes for a given user", async function () {
@@ -73,12 +72,13 @@ describe("getRecipes", function () {
     });
 });
 
-// remove
+/************************************** remove from users_recipes */
 
 describe("remove", function () {
     test("Can remove recipes", async function () {
         const recipes = await Recipe.getRecipes(1)
 
+        // all recipes for user with id 1
         expect(recipes).toEqual([
             { recipe_id: 1111, name: 'fish stew', ww_points: 19 },
             { recipe_id: 2222, name: 'bacon', ww_points: 7 }

@@ -136,4 +136,15 @@ describe("POST /auth/register", function () {
         expect(resp.statusCode).toEqual(400);
     });
 
+    test("bad request with duplicate username", async function () {
+        const resp = await request(app)
+            .post("/auth/register")
+            .send({
+                // user1 alredy exists
+                username: "user1",
+                password: "password"
+            });
+        expect(resp.statusCode).toEqual(400);
+    });
+
 });

@@ -14,7 +14,7 @@ const { BCRYPT_WORK_FACTOR } = require("../config.js");
 /** Related functions for users. */
 
 class User {
-  /** authenticate user with username, password.
+  /** authenticate existing user with username, password.
    *
    * Returns { id, username }
    *
@@ -22,7 +22,7 @@ class User {
    **/
 
   static async authenticate(username, password) {
-    // try to find the user first
+
     const result = await db.query(
       `SELECT id, 
                   username,
@@ -69,9 +69,7 @@ class User {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
     const result = await db.query(
-      `INSERT INTO users
-           (username,
-            password)
+      `INSERT INTO users (username, password)
            VALUES ($1, $2)
            RETURNING username, id`,
       [
@@ -94,7 +92,7 @@ class User {
     const result = await db.query(
       `SELECT id, username
            FROM users
-           ORDER BY username`,
+           ORDER BY id`,
     );
 
     return result.rows;

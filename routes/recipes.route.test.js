@@ -176,7 +176,7 @@ describe("POST /recipes/:id", function () {
         expect(resp.body).toEqual({ "savedRecipe": { "name": "test_recipe", "recipe_id": 1111, "ww_points": 15 } });
     });
 
-    test("400 on invalid data", async function () {
+    test("400 on invalid id", async function () {
         const resp = await request(app)
             .post('/recipes/1')
             .set("authorization", `Bearer ${u1Token}`)
@@ -184,6 +184,32 @@ describe("POST /recipes/:id", function () {
                 id: 'bad id',
                 title: 'test_recipe',
                 weightWatcherSmartPoints: 15
+            });
+
+        expect(resp.statusCode).toEqual(400);
+    });
+
+    test("400 on invalid title", async function () {
+        const resp = await request(app)
+            .post('/recipes/1')
+            .set("authorization", `Bearer ${u1Token}`)
+            .send({
+                id: 1111,
+                title: 12345,
+                weightWatcherSmartPoints: 15
+            });
+
+        expect(resp.statusCode).toEqual(400);
+    });
+
+    test("400 on invalid title", async function () {
+        const resp = await request(app)
+            .post('/recipes/1')
+            .set("authorization", `Bearer ${u1Token}`)
+            .send({
+                id: 1111,
+                title: 'test_recipe',
+                weightWatcherSmartPoints: 'bad points'
             });
 
         expect(resp.statusCode).toEqual(400);

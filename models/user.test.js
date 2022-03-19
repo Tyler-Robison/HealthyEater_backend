@@ -22,7 +22,7 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-//   Auth related methods
+/************************************** user authenticate */
 
 describe("authenticate", function () {
     test("authenticates existing user", async function () {
@@ -52,6 +52,8 @@ describe("authenticate", function () {
     });
 });
 
+/************************************** user register */
+
 describe("register", function () {
     test("registers new user", async function () {
         const hashedPassword = await bcrypt.hash('password', BCRYPT_WORK_FACTOR);
@@ -79,6 +81,17 @@ describe("register", function () {
         }
     });
 
+    test("fails on missing password", async function () {
+
+        try {
+            await User.register({ username: 'user3' })
+            fail();
+        } catch (err) {
+            // data and salt arguments required, can't seem to test for the specific error
+            expect(err).toBeTruthy()
+        }
+    });
+
     test("fails on duplicate user", async function () {
         const hashedPassword = await bcrypt.hash('password', BCRYPT_WORK_FACTOR);
 
@@ -91,7 +104,7 @@ describe("register", function () {
     });
 });
 
-// find all
+/************************************** find all */
 
 describe("findAll", function () {
     test("finds all users", async function () {
@@ -103,7 +116,7 @@ describe("findAll", function () {
     });
 });
 
-//   get
+/************************************** get specific user */
 
 describe("get", function () {
     test("gets a specific user", async function () {
@@ -123,7 +136,7 @@ describe("get", function () {
     });
 });
 
-// set points
+/************************************** set points */
 
 describe("get", function () {
     test("Can set points", async function () {
@@ -149,7 +162,7 @@ describe("get", function () {
     });
 });
 
-// remove
+/************************************** remove user */
 
 describe("remove", function () {
     test("Can remove user", async function () {

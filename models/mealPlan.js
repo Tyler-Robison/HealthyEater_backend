@@ -10,14 +10,14 @@ const {
 
 class MealPlan {
 
-    /** Checks that user and recipe both exist and day is valid
+    /** Checks that user exists and has that recipe saved and day is valid
 * 
 *  creates new mealplan row consisting of user_id, recipe_id and day
 * 
 *  returns id, recipe_id, day, ww_points, name
 */
     static async createMealPlan(id, recipe_id, day) {
-        
+
         const user = await db.query(`SELECT * FROM users WHERE id = $1`, [id])
         if (user.rowCount === 0) throw new NotFoundError(`No user: ${id}`);
 
@@ -46,7 +46,7 @@ class MealPlan {
         return { result: result.rows[0], recipeInfo: recipeInfo.rows[0] }
     }
 
-        /** gets a user's mealplan
+    /** gets a user's mealplan
 * 
 *  Throws NotFoundError if user not found.
 * 
@@ -69,7 +69,8 @@ class MealPlan {
 
         return result.rows
     }
-        /** deletes individual row of user's mealplan based on provided id
+
+    /** deletes individual row of user's mealplan based on provided id
 * 
 *  Throws NotFoundError if id not found.
 * 
@@ -92,7 +93,7 @@ class MealPlan {
         return result.rows[0]
     }
 
-            /** deletes ALL rows of user's mealplan based on userId
+    /** deletes ALL rows of user's mealplan based on userId
 * 
 *  Throws NotFoundError if userId not found.
 */

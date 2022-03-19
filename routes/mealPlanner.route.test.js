@@ -104,8 +104,8 @@ describe("DELETE meals/:id/:meal_id", function () {
             .delete('/meals/1/1')
             .set("authorization", `Bearer ${u1Token}`)
 
-        // expect correctly structured response from API
         expect(resp.statusCode).toEqual(200);
+        expect(resp.body).toEqual({ id: 1 })
     });
 
     test("401 on wrong user", async function () {
@@ -113,7 +113,7 @@ describe("DELETE meals/:id/:meal_id", function () {
             .delete('/meals/2/1')
             .set("authorization", `Bearer ${u1Token}`)
 
-        // expect correctly structured response from API
+
         expect(resp.statusCode).toEqual(401);
     });
 
@@ -122,7 +122,6 @@ describe("DELETE meals/:id/:meal_id", function () {
             .delete('/meals/1/999999')
             .set("authorization", `Bearer ${u1Token}`)
 
-        // expect correctly structured response from API
         expect(resp.statusCode).toEqual(404);
     });
 
@@ -137,7 +136,6 @@ describe("DELETE meals/:id", function () {
             .delete('/meals/1')
             .set("authorization", `Bearer ${u1Token}`)
 
-        // expect correctly structured response from API
         expect(resp.statusCode).toEqual(204);
     });
 
@@ -164,8 +162,9 @@ describe("PATCH meals/:id", function () {
                 points: 15
             });
 
-        // expect correctly structured response from API
+   
         expect(resp.statusCode).toEqual(200);
+        expect(resp.body).toEqual( {"id": 1, "points": 15})
     });
 
     test("401 on wrong user", async function () {
@@ -176,7 +175,7 @@ describe("PATCH meals/:id", function () {
                 points: 15
             });
 
-        // expect correctly structured response from API
+        
         expect(resp.statusCode).toEqual(401);
     });
 
@@ -188,7 +187,19 @@ describe("PATCH meals/:id", function () {
                 points: 'fifteen'
             });
 
-        // expect correctly structured response from API
+      
+        expect(resp.statusCode).toEqual(400);
+    });
+
+    test("400 on negative point value", async function () {
+        const resp = await request(app)
+            .patch('/meals/1')
+            .set("authorization", `Bearer ${u1Token}`)
+            .send({
+                points: -1
+            });
+
+      
         expect(resp.statusCode).toEqual(400);
     });
 
