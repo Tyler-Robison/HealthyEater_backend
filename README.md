@@ -1,7 +1,7 @@
 # Healthy Eater
 An App designed to help users lose weight while eating great tasting recipes.
 
-Live version can be viewed at: 
+Live version can be viewed at: https://healthyeater.surge.sh/healthyeater
 
 ## About Healthy Eater:
 I wanted to create an app that would allow users to search for recipes based on their favorite ingredients and use those recipes to construct a mealplan aimed at helping them lose weight. 
