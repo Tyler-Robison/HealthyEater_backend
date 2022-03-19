@@ -18,7 +18,7 @@ While the Spoontacular API does have a mealplanning feature, I chose to build my
 
 Upon visiting the site, non signed-in users will be directed to the login and registration pages. After Entering a username/password users will have access to the entire site, the homepage will recommend searching for recipes before doing anything else. 
 
-Once they visit Recipe Search, users will enter ingredients one at a time and then click "Get Recipes" to see their results. Optionally, users can add nutritional constraints to the search. 
+Once they visit Recipe Search, users will enter ingredients then click "Get Recipes" to see their results. Optionally, users can add nutritional constraints to the search. 
 
 User will be re-directed to a page containing their search results. From there, users can view additional detail about any recipe that interests them. 
 
@@ -26,13 +26,13 @@ From the recipe detail page users will see in-depth information about that recip
 
 With at least one recipe saved, users can now visit Saved Recipes, where they can view and delete their saved recipes. 
 
-With at least one recipe saved, users can now visit the mealplanner, which allows them to enter their saved meals into a weekly planner.
+Users can now visit the mealplanner, which allows them to enter their saved meals into a weekly planner.
 
 ## Healthy Eater front-end components
 
-1) **Register/login/logout** - for handling user authentication and authorization. Username/Password are all that is required. 
+1) **Register/login/logout** - for handling user authentication and authorization. Username/Password are all that is required. There is an option to login as a guest. 
 
-2) **Recipe Search** - Allows users to search for recipes based on ingredients and nutritional constraints. Returns a list of recipes that meet the search criteria. Users can get in depth information about any recipe including steps, equipment needed, ingredients needed, nutritional information, cook time and how many people it serves. From recipe detail page, users can save any recipes that interest them.
+2) **Recipe Search** - Allows users to search for recipes based on ingredients and nutritional constraints. Returns a list of recipes that meet the search criteria. Users can get in depth information about any recipe including steps, equipment needed, ingredients needed, nutritional information, cook time and how many people it serves. From recipe detail page, users can choose to save the recipe.
 
 3) **Saved Recipes** - Allows users to view and delete all recipes they have saved. In-depth recipe detail can also be accessed from this page
 
@@ -65,7 +65,7 @@ There are 3 models - MealPlan, Recipe and User that contain all methods related 
 
 There are 4 backend routes, defined in app.js
 1) /auth - Routes related to user auth.
-2) /user - Get user info and delete user account.
+2) /user - Routes for getting user info and account deletion.
 3) /recipes - Routes that get recipe info from Spoontacular API and manage user recipes.
 4) /meals - Routes related to user mealplan.
 
@@ -74,7 +74,7 @@ All requests to Spoontacular API are made from the back-end.
 ## Back-end languages: 
 JavaScript, SQL
 ## Back-end libraries/frameworks: 
-Express, Node, postgres, PG, bcrypt, JSONWebToken, JSONschema
+Express, Node, postgres, Axios, PG, bcrypt, JSONWebToken, JSONschema
 
 
 ## How To Install Healthy Eater: 
@@ -86,7 +86,7 @@ To clone front-end:  git clone git@github.com:Tyler-Robison/HealthyEater_fronten
 
 2) Use npm install to install all dependencies in both repos separately. 
 
-3) Secret.js contains the API key needed to interact with Spoontacular API, this file is not included in the repo. You will need to obtain a free key from [Spoontacular API](https://spoonacular.com/food-api) and put it inside a secret.js file kept in the top level of the app. If secret is placed elsewhere you will have to update all paths to it.
+3) In the back-end, secret.js contains the API key needed to interact with Spoontacular API, this file is not included in the repo. You will need to obtain a free key from [Spoontacular API](https://spoonacular.com/food-api) and put it inside a secret.js file kept in the top level of the app. If secret is placed elsewhere you will have to update all paths to it.
 
 
 ## Scripts:
