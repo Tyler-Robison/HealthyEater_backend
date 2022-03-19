@@ -2,11 +2,13 @@
 An App designed to help users lose weight while eating great tasting recipes.
 
 Live version can be viewed at: https://healthyeater.surge.sh/healthyeater
+Back-end GitHub: https://github.com/Tyler-Robison/HealthyEater_backend
+Front-end GitHub: https://github.com/Tyler-Robison/HealthyEater_frontend
 
 ## About Healthy Eater:
 I wanted to create an app that would allow users to search for recipes based on their favorite ingredients and use those recipes to construct a mealplan aimed at helping them lose weight. 
 
-Healthy Eater has a JavaScript/React frontend and a Node.js, Express.js, postgres backend. 
+Healthy Eater has a JavaScript/React frontend and a Node.js, Express.js, PostgreSQL backend. 
 
 [Create React App](https://github.com/facebook/create-react-app) was used to create front-end project.
 
@@ -74,7 +76,7 @@ All requests to Spoontacular API are made from the back-end.
 ## Back-end languages: 
 JavaScript, SQL
 ## Back-end libraries/frameworks: 
-Express, Node, postgres, Axios, PG, bcrypt, JSONWebToken, JSONschema
+Express, Node, PostgreSQL, Axios, PG, bcrypt, JSONWebToken, JSONschema
 
 
 ## How To Install Healthy Eater: 
@@ -82,6 +84,7 @@ Express, Node, postgres, Axios, PG, bcrypt, JSONWebToken, JSONschema
 1) Clone the repo.
 
 To clone back-end:   git clone git@github.com:Tyler-Robison/HealthyEater_backend
+
 To clone front-end:  git clone git@github.com:Tyler-Robison/HealthyEater_frontend
 
 2) Use npm install to install all dependencies in both repos separately. 
